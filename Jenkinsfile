@@ -66,8 +66,10 @@ pipeline {
                 stage('Pushing DockerHub') {
                     steps {
                         sh 'docker tag i-nitingoyal-master ${registry}:${BUILD_NUMBER}'
+                        sh 'docker tag i-nitingoyal-master ${registry}:latest'
                         withDockerRegistry([credentialsId: 'Dockerhub', url: '']){
                             sh 'docker push ${registry}:${BUILD_NUMBER}'
+                            sh 'docker push ${registry}:latest'
                         }
                     }
                 }

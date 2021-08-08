@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: node-app
-        image: nitingoyal/samplenodeapp:27
+        image: nitingoyal/samplenodeapp:latest
         ports:
         - containerPort: 7100
 
@@ -41,7 +41,7 @@ spec:
     spec:
       containers:
       - name: node-app
-        image: nitingoyal/samplenodeapp:27
+        image: nitingoyal/samplenodeapp:latest
         ports:
         - containerPort: 7100
 
