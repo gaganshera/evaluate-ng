@@ -81,8 +81,7 @@ pipeline {
         }
         stage('Kubernetes Deployment') {
             steps{
-                sh 'whoami'
-                sh 'kubectl apply -f deployments.yaml -l branch=${BRANCH_NAME} --namespace nitin-ns'
+                sh 'kubectl apply -f deployments.yaml -l branch=${BRANCH_NAME}'
             }
         }
     }
