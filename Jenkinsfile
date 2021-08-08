@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment{
         registry='nitingoyal/samplenodeapp'
+        deployment_port="${env.BRANCH_NAME == "develop" ? 7300 : 7200}" 
     }
     options {
         timestamps()
@@ -53,7 +54,7 @@ pipeline {
                 stage('Pre Container Check') {
                     steps {
                         sh '''
-                            running_container=`docker ps -a | grep samplenodeapp | awk '{print $1}'`
+                            running_container=`docker ps -a | grep samplenodeapp-${BRANCH_NAME} | awk '{print $1}'`
                             if [[ $running_container != '' ]];
                                 then  
                                     docker stop $running_container;
@@ -75,14 +76,13 @@ pipeline {
         stage('Docker Deployment') {
             steps {
               sh '''
-				docker run --name samplenodeapp -p 7100:7100 -d ${registry}:${BUILD_NUMBER}
+				docker run --name samplenodeapp-${BRANCH_NAME} -p ${deployment_port}:7100 -d ${registry}:${BUILD_NUMBER}
 			  '''
             }
         }
         stage('Kubernetes Deployment') {
             steps{
-                sh 'whoami'
-                sh 'kubectl apply -f deployments.yaml -l branch=${BRANCH_NAME} --namespace nitin-ns'
+                sh 'kubectl apply -f deployments.yaml -l branch=${BRANCH_NAME}'
             }
         }
     }
