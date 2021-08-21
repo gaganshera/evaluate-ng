@@ -4,6 +4,10 @@ pipeline {
         registry='nitingoyal/samplenodeapp'
         deployment_port="${env.BRANCH_NAME == "develop" ? 7300 : 7200}" 
     }
+    tools {
+        // nodejs "nodejs"
+        dockerTool 'docker'
+    }
     options {
         timestamps()
     }
@@ -67,9 +71,11 @@ pipeline {
                     steps {
                         sh 'docker tag i-nitingoyal-master ${registry}:${BUILD_NUMBER}'
                         sh 'docker tag i-nitingoyal-master ${registry}:latest'
-                        withDockerRegistry([credentialsId: 'Dockerhub', url: '']){
-                            sh 'docker push ${registry}:${BUILD_NUMBER}'
-                            sh 'docker push ${registry}:latest'
+                        script {
+                            withDockerRegistry(credentialsId: 'DockerHub', toolName: 'docker') {
+                                sh 'docker push ${registry}:${BUILD_NUMBER}'
+                                sh 'docker push ${registry}:latest'
+                            }
                         }
                     }
                 }
