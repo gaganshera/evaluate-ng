@@ -5,7 +5,7 @@ pipeline {
         deployment_port="${env.BRANCH_NAME == "develop" ? 7300 : 7200}" 
     }
     tools {
-        // nodejs "nodejs"
+        nodejs "nodejs"
         dockerTool 'docker'
     }
     options {
